@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+node_modules/
+dist/
+build/
+.vscode/
+outputs/
+*.zip
+*.log
+*.pdbqt
+
