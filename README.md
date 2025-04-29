@@ -24,9 +24,6 @@ Make sure you have:
 
 - **Python 3.8+**
 - **Node.js (v16 or higher)** and **npm**
-
-Optional (for advanced features):
-
 - **Open Babel** – for file format conversion
 
 
