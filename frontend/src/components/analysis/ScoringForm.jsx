@@ -1,8 +1,8 @@
 // src/components/analysis/ScoringForm.jsx
 import { useState } from "react";
-import axios from "axios";
+import axios from "../../axios";
 
-export default function ScoringForm() {
+export default function ScoringForm({ onSuccess }) {
   const [resultsPath, setResultsPath] = useState("");
   const [scoringMethod, setScoringMethod] = useState("vina");
   const [outputFolder, setOutputFolder] = useState("");
@@ -20,8 +20,15 @@ export default function ScoringForm() {
       });
 
       setStatus(`✅ Success: ${response.data.message}`);
+
+      // Notify parent component to load the results table
+      if (onSuccess) {
+        onSuccess(outputFolder, scoringMethod);
+      }
+
     } catch (err) {
-      setStatus(`❌ Error: ${err.response?.data?.error || "Unexpected error"}`);
+      console.error(err);
+      setStatus(`❌ Error: ${err.response?.data?.detail || err.message || "Unexpected error"}`);
     }
   };
 

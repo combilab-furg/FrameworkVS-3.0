@@ -42,3 +42,47 @@ Copy
 Edit
 git push
 
+
+
+#####################################################
+You're seeing that error because:
+
+* There are **new commits on GitHub** that your local repo doesn't have yet.
+* Git refuses to let you push until you've **pulled and merged** those changes.
+
+---
+
+### ✅ Step-by-step fix:
+
+1. First, stage all your changes:
+
+```bash
+git add .
+```
+
+2. Then commit:
+
+```bash
+git commit -m "Add updated backend, frontend, and new pages"
+```
+
+3. Pull the latest changes from GitHub **and auto-merge**:
+
+```bash
+git pull --rebase origin main
+```
+
+> `--rebase` makes sure your changes go **on top of** the latest GitHub version — cleaner history, no merge commits.
+
+4. Finally, push your work:
+
+```bash
+git push
+```
+
+---
+
+This will fully sync your changes with GitHub without conflict.
+
+Let me know if it asks for a merge or if any file has conflicts — I’ll help you resolve it instantly.
+

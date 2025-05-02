@@ -15,6 +15,16 @@ class ScoringRequest(BaseModel):
     scoring_method: str
     output_folder: str
 
+@router.get("/advanced/scoring/results")
+def get_scoring_results(path: str):
+    """
+    Serves a scoring CSV file from disk.
+    `path` is the absolute path to the .csv file.
+    """
+    if not os.path.isfile(path):
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(path, media_type="text/csv", filename=os.path.basename(path))
+ 
 @router.post("/advanced/scoring")
 def run_scoring(data: ScoringRequest):
     results_path = data.results_path
@@ -46,8 +56,10 @@ def run_scoring(data: ScoringRequest):
                                         f_out.write(f"{ligand},{score}\n")
 
         elif scoring_method == "rfscore":
+            script_path = os.path.join(os.path.dirname(__file__), "../ml_models/run_rfscore.py")
+            print(f"[RFScore DEBUG] Running: python3 {script_path} --input {results_path} --output {output_folder}")
             subprocess.run([
-                "python3", "ml_models/run_rfscore.py",
+                "python3", script_path,
                 "--input", results_path,
                 "--output", output_folder
             ], check=True)
@@ -66,8 +78,10 @@ def run_scoring(data: ScoringRequest):
         return {"message": f"Scoring complete. Results saved to: {output_folder}"}
 
     except subprocess.CalledProcessError as e:
+        print(f"[RFScore ERROR] Subprocess failed:\n{e}")
         raise HTTPException(status_code=500, detail=f"Scoring failed: {str(e)}")
     except Exception as e:
+        print(f"[RFScore ERROR] Unexpected error:\n{e}")
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 

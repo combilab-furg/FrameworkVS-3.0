@@ -7,7 +7,7 @@ from api import docking, analysis, file_upload
 from api import docking  # 
 from api import convert
 from routes import advanced_analysis
-
+from routes.advanced_analysis import router as advanced_router
 app = FastAPI(title="FrameworkVS 3.0 Backend")
 
 # Allow frontend to connect
@@ -26,6 +26,7 @@ app.include_router(file_upload.router, prefix="/files")
 app.include_router(docking.router, prefix="/docking")
 app.include_router(convert.router, prefix="/convert")
 app.include_router(advanced_analysis.router)
+app.include_router(advanced_router, prefix="/advanced")
 @app.get("/")
 def read_root():
     return {"message": "FrameworkVS 3.0 Backend is running!"}
