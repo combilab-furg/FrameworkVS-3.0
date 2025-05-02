@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import './styles/globals.css'
 import Home from "./pages/Home";
 import NewDocking from "./pages/NewDocking";
+import AdvancedAnalysisPage from "./pages/AdvancedAnalysisPage"; // ADD this
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/new-docking" element={<NewDocking />} />
+        <Route path="/advanced-analysis" element={<AdvancedAnalysisPage />} /> 
       </Routes>
     </Router>
   );

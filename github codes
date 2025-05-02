@@ -1,0 +1,44 @@
+Quick Summary of what you achieved:
+You generated and added an SSH key.
+
+You updated your Git remote to SSH.
+
+You pushed the entire project without any password/token needed.
+
+Your main branch is now linked (set up to track) with the remote main branch.
+
+Now next time you just use:
+
+bash
+Copy
+Edit
+git add .
+git commit -m "your message"
+git push
+→ no password, no problem!
+
+
+After you change something:
+Stage your changes:
+
+bash
+Copy
+Edit
+git add .
+(This means: "I want to include ALL changed files.")
+
+Create a commit message:
+
+bash
+Copy
+Edit
+git commit -m "your message explaining what you changed"
+(Example: git commit -m "Fixed bug in docking script")
+
+Push the update to GitHub:
+
+bash
+Copy
+Edit
+git push
+

@@ -1,22 +1,59 @@
 # backend/core/plip_runner.py
 
-import os
-from plip.structure.preparation import PDBComplex
-from plip.exchange.report import BindingSiteReport
+import subprocess
+from pathlib import Path
 
-def run_plip_analysis(pdbqt_path: str) -> dict:
-    pdb_path = pdbqt_path.replace(".pdbqt", ".pdb")
+def convert_to_pdbqt_to_pdb(input_path: str, output_path: Path):
+    result = subprocess.run(
+        ["obabel", input_path, "-O", str(output_path)],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"Open Babel conversion failed:\n{result.stderr}")
 
-    if not os.path.exists(pdb_path):
-        raise FileNotFoundError(f"PDB file not found: {pdb_path}")
+def run_plip(receptor_path: str, ligand_path: str, output_folder: str) -> str:
+    base_out = Path(output_folder)
+    base_out.mkdir(parents=True, exist_ok=True)
 
-    protlig = PDBComplex()
-    protlig.load_pdb(pdb_path)
-    protlig.analyze()
+    # Convert both inputs
+    rec_pdb = base_out / f"converted_{Path(receptor_path).stem}_receptor.pdb"
+    lig_pdb = base_out / f"converted_{Path(ligand_path).stem}_ligand.pdb"
+    convert_to_pdbqt_to_pdb(receptor_path, rec_pdb)
+    convert_to_pdbqt_to_pdb(ligand_path, lig_pdb)
 
-    report = {}
+    # Combine
+    combined = base_out / f"complex_{Path(ligand_path).stem}.pdb"
+    with combined.open("w") as out:
+        out.write(rec_pdb.read_text())
+        out.write("\n")
+        out.write(lig_pdb.read_text())
 
-    for key, site in protlig.interaction_sets.items():
-        report[key] = BindingSiteReport(site).to_dict()
+    # Output folder and filename
+    ligand_stem = Path(ligand_path).stem
+    out_dir = base_out / f"plip_{ligand_stem}"
+    out_dir.mkdir(exist_ok=True)
 
-    return report
+    xml_name = f"plip_{ligand_stem}.xml"
+    expected_path = out_dir / xml_name
+
+    # Run PLIP
+    proc = subprocess.run(
+        [
+            "plip",
+            "-f", str(combined),
+            "-o", str(out_dir),
+            "-x",
+            "--name", xml_name
+        ],
+        capture_output=True,
+        text=True
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"PLIP failed:\n{proc.stderr}")
+
+    # 🔄 Rename if PLIP adds .xml.xml
+    actual_file = out_dir / f"{xml_name}.xml"
+    if actual_file.exists():
+        actual_file.rename(expected_path)
+
+    return str(expected_path)
