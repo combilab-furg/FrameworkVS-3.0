@@ -37,7 +37,9 @@ Make sure you have:
 ```bash
 cd path/to/FrameworkVS-3.0
 ```
-
+```bash
+cd backend/
+```
 3. Install Python dependencies:
 
 ```bash
