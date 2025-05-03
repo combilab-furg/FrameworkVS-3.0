@@ -1,0 +1,31 @@
+# --- Core Web Framework ---
+fastapi
+uvicorn[standard]
+
+# --- File Uploads & Parsing ---
+python-multipart
+
+# --- Core Scientific Libraries ---
+numpy
+pandas
+scikit-learn
+
+# --- Bioinformatics Tools ---
+biopython  # for reading .pdb files etc.
+
+# --- Optional: For binding site analysis (PLIP) ---
+plip==2.1.7
+
+# --- Optional: Run external tools like obabel or MGLTools ---
+# No pip install needed, but use subprocess in code
+
+# --- Dev / Typing Tools ---
+httpx  # Optional: for internal test requests
+typing_extensions
+
+# --- Jupyter for local testing (optional) ---
+jupyterlab
+
+# --- Pydantic (FastAPI Dependency Handling) ---
+pydantic>=1.10,<3
+

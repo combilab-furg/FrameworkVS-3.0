@@ -4,7 +4,7 @@ import moleculeImage from "../assets/molecule.jpg"; // Ensure you have an image 
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gray-50">
+    <div className="relative min-h-screen overflow-hidden bg-gray-50 flex flex-col">
       {/* Background image */}
       <img src={moleculeImage} alt="Molecular Docking" className="absolute inset-0 w-full h-full object-cover opacity-30" />
 
@@ -12,7 +12,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm"></div>
 
       {/* Main content */}
-      <div className="relative flex flex-col items-center justify-center min-h-screen px-4 text-center">
+      <div className="relative flex-1 flex flex-col items-center justify-center px-4 text-center z-10">
         <h1 className="text-5xl font-extrabold text-blue-700 mb-4">FrameworkVS 3.0</h1>
         <p className="text-lg text-gray-700 max-w-2xl mb-8">
           A modern virtual screening tool for ligand-receptor docking simulations and analysis.
@@ -31,6 +31,12 @@ export default function Home() {
           </Link>
         </div>
       </div>
+
+      {/* Footer pinned to bottom */}
+      <footer className="relative z-10 text-center text-sm text-gray-600 py-4">
+        © Combi-Lab VS 2025. All rights reserved.
+      </footer>
     </div>
   );
 }
+

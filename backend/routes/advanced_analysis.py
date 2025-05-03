@@ -44,7 +44,7 @@ def run_scoring(data: ScoringRequest):
         if scoring_method == "vina":
             score_file = os.path.join(output_folder, "vina_scores.csv")
             with open(score_file, "w") as f_out:
-                f_out.write("Ligand,Score\n")
+                f_out.write("Ligand,Affinity,RMSD_LB,RMSD_UB\n")
                 for root, _, files in os.walk(results_path):
                     for file in files:
                         if file.endswith((".log", ".txt", ".pdbqt")):
@@ -52,13 +52,15 @@ def run_scoring(data: ScoringRequest):
                             with open(path) as f_in:
                                 for line in f_in:
                                     if "REMARK VINA RESULT" in line:
-                                        score = line.strip().split()[3]  # more accurate than [-2]
-                                        f_out.write(f"{file},{score}\n")
+                                        parts = line.strip().split()
+                                        if len(parts) >= 6:
+                                            score, rmsd_lb, rmsd_ub = parts[3:6]
+                                            f_out.write(f"{file},{score},{rmsd_lb},{rmsd_ub}\n")
                                         break
-                                    elif line.strip() and len(line.strip().split()) >= 2:
+                                    elif line.strip() and len(line.strip().split()) >= 4:
                                         parts = line.strip().split()
                                         if parts[0].isdigit():
-                                            f_out.write(f"{file},{parts[1]}\n")
+                                            f_out.write(f"{file},{parts[1]},0.000,0.000\n")
                                             break
 
         elif scoring_method == "rfscore":
