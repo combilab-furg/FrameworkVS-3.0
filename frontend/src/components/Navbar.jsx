@@ -7,7 +7,10 @@ export default function Navbar() {
         <h1 className="text-xl font-bold text-blue-600">Combi-lab</h1>
         <div className="flex gap-4">
           <Link to="/" className="hover:text-blue-600">Home</Link>
-          <a href="/docs" className="hover:text-blue-600">Documentation</a>
+    
+          <Link to="/documentation" className="hover:text-blue-600">
+           Documentation
+          </Link>
         </div>
       </div>
     </nav>

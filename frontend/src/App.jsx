@@ -4,6 +4,7 @@ import './styles/globals.css'
 import Home from "./pages/Home";
 import NewDocking from "./pages/NewDocking";
 import AdvancedAnalysisPage from "./pages/AdvancedAnalysisPage"; // ADD this
+import DocumentationPage from "./pages/DocumentationPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/new-docking" element={<NewDocking />} />
         <Route path="/advanced-analysis" element={<AdvancedAnalysisPage />} /> 
+        <Route path="/documentation" element={<DocumentationPage />} />
       </Routes>
     </Router>
   );

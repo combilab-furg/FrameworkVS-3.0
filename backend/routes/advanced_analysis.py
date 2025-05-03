@@ -1,12 +1,10 @@
-# backend/routes/advanced_analysis.py
 from fastapi import APIRouter, HTTPException, UploadFile, File, Query, Form
 from fastapi.responses import FileResponse
 from pathlib import Path
 from urllib.parse import unquote
 import shutil, uuid, subprocess
 from pydantic import BaseModel
-from pathlib import Path
-import os, subprocess
+import os
 
 router = APIRouter()
 
@@ -17,14 +15,17 @@ class ScoringRequest(BaseModel):
 
 @router.get("/advanced/scoring/results")
 def get_scoring_results(path: str):
-    """
-    Serves a scoring CSV file from disk.
-    `path` is the absolute path to the .csv file.
-    """
     if not os.path.isfile(path):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(path, media_type="text/csv", filename=os.path.basename(path))
- 
+
+@router.get("/advanced/scoring/csv")
+def get_scores_csv(folder: str = Query(...), file: str = Query(...)):
+    csv_path = os.path.join(folder, file)
+    if os.path.exists(csv_path):
+        return FileResponse(csv_path, media_type="text/csv", filename=file)
+    return {"detail": "CSV file not found"}
+
 @router.post("/advanced/scoring")
 def run_scoring(data: ScoringRequest):
     results_path = data.results_path
@@ -46,18 +47,22 @@ def run_scoring(data: ScoringRequest):
                 f_out.write("Ligand,Score\n")
                 for root, _, files in os.walk(results_path):
                     for file in files:
-                        if file.endswith(".log"):
+                        if file.endswith((".log", ".txt", ".pdbqt")):
                             path = os.path.join(root, file)
                             with open(path) as f_in:
                                 for line in f_in:
                                     if "REMARK VINA RESULT" in line:
-                                        score = line.strip().split()[-2]
-                                        ligand = os.path.splitext(file)[0]
-                                        f_out.write(f"{ligand},{score}\n")
+                                        score = line.strip().split()[3]  # more accurate than [-2]
+                                        f_out.write(f"{file},{score}\n")
+                                        break
+                                    elif line.strip() and len(line.strip().split()) >= 2:
+                                        parts = line.strip().split()
+                                        if parts[0].isdigit():
+                                            f_out.write(f"{file},{parts[1]}\n")
+                                            break
 
         elif scoring_method == "rfscore":
             script_path = os.path.join(os.path.dirname(__file__), "../ml_models/run_rfscore.py")
-            print(f"[RFScore DEBUG] Running: python3 {script_path} --input {results_path} --output {output_folder}")
             subprocess.run([
                 "python3", script_path,
                 "--input", results_path,
@@ -78,33 +83,22 @@ def run_scoring(data: ScoringRequest):
         return {"message": f"Scoring complete. Results saved to: {output_folder}"}
 
     except subprocess.CalledProcessError as e:
-        print(f"[RFScore ERROR] Subprocess failed:\n{e}")
         raise HTTPException(status_code=500, detail=f"Scoring failed: {str(e)}")
     except Exception as e:
-        print(f"[RFScore ERROR] Unexpected error:\n{e}")
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
-
 
 
 @router.get("/advanced/plip-report")
 def download_plip_report(path: str = Query(..., description="Path to the PLIP XML")):
-    # Decode any percent‐encoding
     path = unquote(path)
-
-    # Try it as given
     file_path = Path(path)
-
-    # If it doesn’t exist as an absolute path, try relative to cwd
     if not file_path.is_file():
         file_path = Path.cwd() / path
-
-    # If still not found, error with both attempted paths
     if not file_path.is_file():
         raise HTTPException(
             status_code=404,
             detail=f"Report not found. Tried:\n • {path}\n • {file_path}"
         )
-
     return FileResponse(
         str(file_path),
         media_type="application/xml",
@@ -119,7 +113,6 @@ async def run_plip_analysis(
     output_folder: str = Form(...)
 ):
     try:
-        # 1) Save uploads to a temp directory
         temp_dir = Path("tmp_plip")
         temp_dir.mkdir(exist_ok=True)
         ligand_path = temp_dir / f"{uuid.uuid4()}_{ligand.filename}"
@@ -129,7 +122,6 @@ async def run_plip_analysis(
         with open(receptor_path, "wb") as f:
             shutil.copyfileobj(receptor.file, f)
 
-        # 2) Run PLIP (conversion + combine + analysis)
         from core.plip_runner import run_plip
         xml_report = run_plip(
             receptor_path=str(receptor_path),
@@ -137,7 +129,6 @@ async def run_plip_analysis(
             output_folder=output_folder
         )
 
-        # 3) Return both message and report path
         return {
             "message": "PLIP analysis complete.",
             "report": xml_report
@@ -149,7 +140,6 @@ async def run_plip_analysis(
 
 @router.post("/advanced/run-vsframework")
 async def run_vsframework_script(script: UploadFile = File(...)):
-    # 1) Save to a temp folder
     tmp_dir = Path("tmp_scripts")
     tmp_dir.mkdir(exist_ok=True)
     unique_name = f"{uuid.uuid4()}_{script.filename}"
@@ -158,7 +148,6 @@ async def run_vsframework_script(script: UploadFile = File(...)):
     content = await script.read()
     script_path.write_bytes(content)
 
-    # 2) Run it
     try:
         result = subprocess.run(
             ["python3", str(script_path)],
@@ -170,12 +159,9 @@ async def run_vsframework_script(script: UploadFile = File(...)):
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=e.stderr or "Script failed")
 
-    # 3) Cleanup
     try:
         script_path.unlink()
     except OSError:
         pass
 
     return {"message": output, "output": output}
-
-
