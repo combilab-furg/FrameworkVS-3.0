@@ -28,6 +28,7 @@ jupyterlab
 
 # --- Pydantic (FastAPI Dependency Handling) ---
 pydantic>=1.10,<3
+# --- uvicorn---
+uvicorn
 
-
-
+python-multipart
