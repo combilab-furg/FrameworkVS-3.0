@@ -47,6 +47,9 @@ pip install -r requirements.txt
 ```
 
 4. Install frontend dependencies:
+   
+for windows
+Press Windows + R, type cmd, hit Enter. 
 
 ```bash
 npm install
