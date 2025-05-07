@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import moleculeImage from "../assets/molecule.jpg"; // Ensure you have an image here
 
-export default function Home() {
+export default function Home() { 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gray-50 flex flex-col">
       {/* Background image */}
