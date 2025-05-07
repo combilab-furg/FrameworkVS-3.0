@@ -328,7 +328,7 @@ export default function NewDocking() {
         // ✅ Construct full path from basePath
         const fullPath = `${basePath}/${folderName}`;
               // ✅ Filter supported formats
-        const validExts = [".pdbqt", ".pdb", ".cif"];
+        const validExts = [".pdbqt", ".pdb",".mol2", ".sdf"];
         const filtered = Array.from(files).filter(file =>
           validExts.includes(file.name.toLowerCase().slice(file.name.lastIndexOf(".")))
         );
@@ -624,6 +624,10 @@ export default function NewDocking() {
         </div>
 
       </div>
+            {/* Footer pinned to bottom */}
+      <footer className="relative z-10 text-center text-sm text-gray-600 py-4">
+        © Combi-Lab VS 2025. All rights reserved.
+      </footer>
       </div>
     </>
   );

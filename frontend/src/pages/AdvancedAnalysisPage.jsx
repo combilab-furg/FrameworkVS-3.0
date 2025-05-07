@@ -46,6 +46,10 @@ export default function AdvancedAnalysisPage() {
         )}
         {selectedAction === "run-vsframework" && <RunVsframeworkForm />}
       </div>
+                  {/* Footer pinned to bottom */}
+      <footer className="relative z-10 text-center text-sm text-gray-600 py-4">
+        © Combi-Lab VS 2025. All rights reserved.
+      </footer>
     </div>
   );
 }

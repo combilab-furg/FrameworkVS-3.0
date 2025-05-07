@@ -53,6 +53,10 @@ export default function DocumentationPage() {
       <p className="text-sm text-gray-500 mt-6">
         📚 Full section breakdowns and interactive walkthroughs are being added. Stay tuned for more updates!
       </p>
+                  {/* Footer pinned to bottom */}
+      <footer className="relative z-10 text-center text-sm text-gray-600 py-4">
+        © Combi-Lab VS 2025. All rights reserved.
+      </footer>
     </div>
   );
 }
