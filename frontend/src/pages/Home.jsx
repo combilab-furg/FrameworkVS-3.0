@@ -1,6 +1,6 @@
 // src/pages/Home.jsx
 import { Link } from "react-router-dom";
-import moleculeImage from "../assets/molecule.jpg"; // Ensure you have an image here
+import moleculeImage from "../assets/molecule.jpg"; 
 
 export default function Home() {   
   return (

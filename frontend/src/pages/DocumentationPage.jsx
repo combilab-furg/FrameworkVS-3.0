@@ -3,7 +3,7 @@ import React from "react";
 export default function DocumentationPage() {
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">📘 FrameworkVS 3.0 – User Guide</h1>
+      <h1 className="text-3xl font-bold mb-6"> FrameworkVS 3.0 – User Guide</h1>
 
       <p className="mb-4 text-lg">
         Welcome to the official user guide for <strong>FrameworkVS 3.0</strong>, your all-in-one
@@ -12,14 +12,14 @@ export default function DocumentationPage() {
         and utilize every feature of the system, with interactive tips and visual aids.
       </p>
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">📑 Table of Contents</h2>
+      <h2 className="text-xl font-semibold mt-6 mb-2">Table of Contents</h2>
       <ul className="list-disc list-inside text-base mb-6 space-y-1">
-        <li>📌 Introduction</li>
-        <li>🧬 System Overview</li>
-        <li>🏠 Home Page Navigation</li>
-        <li>🧪 New Docking Setup</li>
-        <li>📊 Advanced Analysis Tools</li>
-        <li>💡 Tips and Troubleshooting</li>
+        <li>Introduction</li>
+        <li>System Overview</li>
+        <li>Home Page Navigation</li>
+        <li>New Docking Setup</li>
+        <li>Advanced Analysis Tools</li>
+        <li>Tips and Troubleshooting</li>
         <li>❓ FAQ</li>
       </ul>
 
@@ -51,7 +51,7 @@ export default function DocumentationPage() {
       </div>
 
       <p className="text-sm text-gray-500 mt-6">
-        📚 Full section breakdowns and interactive walkthroughs are being added. Stay tuned for more updates!
+        Full section breakdowns and interactive walkthroughs are being added. Stay tuned for more updates!
       </p>
                   {/* Footer pinned to bottom */}
       <footer className="relative z-10 text-center text-sm text-gray-600 py-4">

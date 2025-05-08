@@ -156,8 +156,11 @@ def generate_vsframework(
     box_size = Vector3({box_size[0]}, {box_size[1]}, {box_size[2]})
     box_step = Vector3({box_step[0]}, {box_step[1]}, {box_step[2]})
     box_count = Vector3({box_count[0]}, {box_count[1]}, {box_count[2]})
+ 
+    ###############################
+    # === Output Configuration ===#
+    ###############################
 
-    # === Output Configuration ===
     output_path = r"{output_path}"
     hierarchy = {{
         "brothers": ["Receptors"],
